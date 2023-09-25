@@ -2,9 +2,6 @@
 
 const BASE_URL = "https://hack-or-snooze-v3.herokuapp.com";
 
-/******************************************************************************
- * Story: a single story in the system
- */
 
 class Story {
 
@@ -24,8 +21,7 @@ class Story {
   /** Parses hostname out of URL and returns it. */
 
   getHostName() {
-    // UNIMPLEMENTED: complete this function!
-    return "hostname.com";
+    return new URL(this.url).host;
   }
 }
 
@@ -73,15 +69,39 @@ class StoryList {
    * Returns the new Story instance
    */
 
-  async addStory( /* user, newStory */) {
-    // UNIMPLEMENTED: complete this function!
+  async addStory(user, { title, author, url}) {
+
+    const storyData = {
+      token: user.loginToken,
+      story: {title, author, url}
+    };
+    
+    const response = await axios({
+      method: "POST",
+      url: `${BASE_URL}/stories`,
+      data: storyData
+    });
+
+    const newStory = new Story(response.data.story);
+    this.stories.unshift(newStory);
+    user.ownStories.unshift(newStory);
+
+    return newStory;
+  }
+
+  async removeStory(user, storyId) {
+    await axios({
+      url: `${BASE_URL}/stories/${storyId}`,
+      method: "DELETE",
+      data: { token: user.loginToken } //API won't let me just pass in a token directly. I have to wrap the token in an ojbect
+    });
+
+    this.stories = this.stories.filter(story => story.storyId !== storyId);
+
+    user.ownStories = user.ownStories.filter(s => s.storyId !== storyId);
+    user.favorites = user.favorites.filter(s => s.storyId !== storyId);
   }
 }
-
-
-/******************************************************************************
- * User: a user in the system (only used to represent the current user)
- */
 
 class User {
   /** Make user instance from obj of user data and a token:
@@ -193,4 +213,41 @@ class User {
       return null;
     }
   }
+
+  async _updateAPIFavorite(method, story) {
+    try {
+      await axios({
+        url: `${BASE_URL}/users/${this.username}/favorites/${story.storyId}`,
+        method: method,
+        data: { token: this.loginToken },
+      });
+      return true;
+    } catch (error) {
+      console.error("Failed to update favorite:", error);
+      return false;
+    }
+  }
+
+
+  async addFavorite(story) {
+    if (await this._updateAPIFavorite("POST", story)) { //ensures that local state is in sync with server state
+      this.favorites.push(story);
+    }
+  }
+
+  async removeFavorite(story) {
+    if (await this._updateAPIFavorite("DELETE", story)) { //same
+      this.favorites = this.favorites.filter(s => s.storyId != story.storyId);
+    }
+  }
+
+  isFavorite(story) {
+    return this.favorites.some(s => (s.storyId === story.storyId));
+  }
+
+
+  isOwnStory(story) {
+    return this.ownStories.some(s => (s.storyId === story.storyId));
+  }
+
 }
