@@ -69,22 +69,23 @@ class StoryList {
    * Returns the new Story instance
    */
 
-  async addStory(user, { title, author, url}) {
+  //used in stories.js in showNewStory
+  async addStory(user, { title, author, url}) { //takes in user, and an object containing title, author, and url
 
-    const storyData = {
+    const storyData = { //I put the token and story information in an object called storyData
       token: user.loginToken,
       story: {title, author, url}
     };
     
-    const response = await axios({
+    const response = await axios({ //I call the API and store the response
       method: "POST",
       url: `${BASE_URL}/stories`,
       data: storyData
     });
 
-    const newStory = new Story(response.data.story);
-    this.stories.unshift(newStory);
-    user.ownStories.unshift(newStory);
+    const newStory = new Story(response.data.story); // we create a new Story object afterwards and add it to the beginning of the stories list
+    this.stories.unshift(newStory); //this is within the storyList class so we have to do this.stories
+    user.ownStories.unshift(newStory); // also need to add this to the user's ownStories list
 
     return newStory;
   }
@@ -96,10 +97,10 @@ class StoryList {
       data: { token: user.loginToken } //API won't let me just pass in a token directly. I have to wrap the token in an ojbect
     });
 
-    this.stories = this.stories.filter(story => story.storyId !== storyId);
+    this.stories = this.stories.filter(story => story.storyId !== storyId);  //updating our stories list
 
-    user.ownStories = user.ownStories.filter(s => s.storyId !== storyId);
-    user.favorites = user.favorites.filter(s => s.storyId !== storyId);
+    user.ownStories = user.ownStories.filter(s => s.storyId !== storyId); //updating user's story list
+    user.favorites = user.favorites.filter(s => s.storyId !== storyId); //updating user's favorite list
   }
 }
 
@@ -214,22 +215,22 @@ class User {
     }
   }
 
-  async _updateAPIFavorite(method, story) {
+  async _updateAPIFavorite(method, story) { //this is a method to update the API with the user's favorite
     try {
       await axios({
-        url: `${BASE_URL}/users/${this.username}/favorites/${story.storyId}`,
+        url: `${BASE_URL}/users/${this.username}/favorites/${story.storyId}`, //api url per the documentation
         method: method,
         data: { token: this.loginToken },
       });
       return true;
     } catch (error) {
-      console.error("Failed to update favorite:", error);
+      console.error("Failed to update favorite:", error); //error message here in case the API fails for some reason
       return false;
     }
   }
 
 
-  async addFavorite(story) {
+  async addFavorite(story) { //this is the method in charge of deciding if it's an adding or removing favorite
     if (await this._updateAPIFavorite("POST", story)) { //ensures that local state is in sync with server state
       this.favorites.push(story);
     }

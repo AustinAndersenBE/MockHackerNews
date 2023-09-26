@@ -20,11 +20,11 @@ $body.on("click", "#nav-all", navAllStories);
 
 function navSubmitStoryClick(evt) {
   console.debug("navSubmitStoryClick", evt);
-  hidePageComponents();
-  $submitForm.show();
-  $allStoriesList.show();
-  $favoritedStories.hide();
-  $ownStories.hide();
+  hidePageComponents(); //hide unecessary html elements
+  $submitForm.show(); //show the submission form
+  $allStoriesList.show(); //show the list of stories as well
+  $favoritedStories.hide(); //hide everything else
+  $ownStories.hide(); //^^
 }
 
 $navSubmitStory.on("click", navSubmitStoryClick);
@@ -65,7 +65,7 @@ $navFavorites.on("click", navFavoritesCLick);
 function navMyStories(evt) {
   console.debug("navMyStories", evt);
   hidePageComponents();
-  putUserStoriesOnPage();
+  putUserStoriesOnPage(); //responsible for displaying the list on the webpage
   $favoritedStories.hide();
 }
 
