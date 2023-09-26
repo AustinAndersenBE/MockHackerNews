@@ -72,7 +72,7 @@ $navLogOut.on("click", logout);
  * that user. This is meant to be called on page load, just once.
  */
 
-async function checkForRememberedUser() {
+async function checkForRememberedUser() { //checks in local storage to see if there is a token and username which determines if user is logged in
   console.debug("checkForRememberedUser");
   const token = localStorage.getItem("token");
   const username = localStorage.getItem("username");

@@ -44,7 +44,7 @@ async function start() {
 
   // "Remember logged-in user" and log in, if credentials in localStorage
   await checkForRememberedUser();
-  await getAndShowStoriesOnStart();
+  await getAndShowStoriesOnStart(); //once they are logged in, we can show the stories on the main page
 
   // if we got a logged-in user
   if (currentUser) updateUIOnUserLogin();
@@ -56,4 +56,4 @@ console.warn("HEY STUDENT: This program sends many debug messages to" +
   " the console. If you don't see the message 'start' below this, you're not" +
   " seeing those helpful debug messages. In your browser console, click on" +
   " menu 'Default Levels' and add Verbose");
-$(start);
+$(start); // start function is called to initialize the entire code

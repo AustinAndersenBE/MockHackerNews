@@ -35,6 +35,7 @@ $navSubmitStory.on("click", navSubmitStoryClick);
 function navLoginClick(evt) {
   console.debug("navLoginClick", evt);
   hidePageComponents();
+  $storiesLoadingMsg.hide();
   $loginForm.show();
   $signupForm.show();
 }

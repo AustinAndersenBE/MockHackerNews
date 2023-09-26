@@ -6,10 +6,10 @@ let storyList;
 /** Get and show stories when site first loads. */
 
 async function getAndShowStoriesOnStart() {
-  storyList = await StoryList.getStories();
-  $storiesLoadingMsg.remove();
+  storyList = await StoryList.getStories(); //wait for StoryList to return a list of stories
+  $storiesLoadingMsg.remove(); // we remove the loading message once StoryList returns a list of stories
 
-  putStoriesOnPage();
+  putStoriesOnPage(); //we display the list of stories on the page
 }
 
 /**
