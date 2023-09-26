@@ -19,27 +19,30 @@ async function getAndShowStoriesOnStart() {
  * Returns the markup for the story.
  */
 
+//function takes a story and generates the story list that we see
 function generateStoryMarkup(story, user = null, showTrashBtn = false) { // passing a user state in it allows us to check conditionally generate markup
   console.debug("generateStoryMarkup invoked with:", { story, user, showTrashBtn });
-  const hostName = story.getHostName();
-  
+  const hostName = story.getHostName(); 
+  //initializing default variables
   let trashCanHTML = "";
   let isFavorite = false;
   let starType = "far";
   let starHTML = "";
 
-  if (user) {
+  if (user) { //if a user is logged in
     
-    const isOwnStory = user.isOwnStory(story);
+    const isOwnStory = user.isOwnStory(story); //we check if the story belongs to the user
     trashCanHTML = showTrashBtn && isOwnStory ? `<span class="trash-can"><i class="fas fa-trash-alt" data-story-id="${story.storyId}"></i></span>` : ""; //adding custom data to the trash button
-
+    // if we want this to show the trash button and if it's a user's own story, we create the trashcan icon html
     
-    isFavorite = user.isFavorite(story);
+    isFavorite = user.isFavorite(story); // we set star type based on if it's already a favorited story by the user
     starType = isFavorite ? "fas" : "far";
     starHTML = `<span class="star"><i class="${starType} fa-star" data-story-id="${story.storyId}"></i></span>`;
   }
  
-  const $storyMarkup = $(`
+
+  // this creates the HTML (list of stories that you see) on the webpage
+  const $storyMarkup = $(` 
       <li id="${story.storyId}">
         ${trashCanHTML}
         ${starHTML}
@@ -65,10 +68,10 @@ async function toggleFavorite(event, user) {
     return;
   }
 
-  if (user.isFavorite(story)) {
+  if (user.isFavorite(story)) { //if the story selected is a favorite, we remove it
     await user.removeFavorite(story);
     $star.removeClass('fas').addClass('far');
-  } else {
+  } else { //if the story selected is not a favorite, we add it to the favorite
     await user.addFavorite(story);
     $star.removeClass('far').addClass('fas');
   }
@@ -76,10 +79,10 @@ async function toggleFavorite(event, user) {
 
 /** Gets list of stories from server, generates their HTML, and puts on page. */
 
-function putStoriesOnPage() {
+function putStoriesOnPage() { //function is in charge of putting the stories on the page
   console.debug("putStoriesOnPage");
 
-  $allStoriesList.empty();
+  $allStoriesList.empty(); //we clear out any existing html to re-do the html everytime from our list of stories
 
   // loop through all of our stories and generate HTML for them
   for (let story of storyList.stories) {
@@ -89,7 +92,11 @@ function putStoriesOnPage() {
 
   $allStoriesList.show();
 }
-
+// this function is an async function that handles the event when a user submits a new story
+// we gather the user's input for the story's title, URL and author from the form fields,  amd we put them in storyData
+// we then make an API call to add the new story to the server
+// use the addStory method from the storyList global object and pass in current user and the storyData
+// once we generate that one new story, we add it to the beginning of the list of all stories which updates the UI
 async function showNewStory(evt) {
   console.debug("showNewStory");
   evt.preventDefault();
@@ -140,7 +147,6 @@ async function deleteStory(evt) {
     await storyList.removeStory(currentUser, storyId);
     putUserStoriesOnPage();
 }
-  
 
 $('body').on('click', '.trash-can', deleteStory);
 

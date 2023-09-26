@@ -6,7 +6,7 @@
 
 /** Show main list of all stories when click site name */
 
-function navAllStories(evt) {
+function navAllStories(evt) { //each of these functions are responsible for redisplaying the page once we click on a navBar
   console.debug("navAllStories", evt);
   hidePageComponents();
   $favoritedStories.hide();
