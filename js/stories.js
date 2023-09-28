@@ -130,14 +130,14 @@ $submitForm.on("submit", showNewStory); //attaching the event to the submit butt
 // if there's nothing in favorites, show no favorites added
 // otherwise, we generate the HTML for every story in the favorites list
 
-function displayFavoritesList() {
+function displayFavoritesList() { //this function is used in nav.js, navFavoritesClick function to display the favorites list
   console.debug("displayFavoritesList");
 
-  $favoritedStories.empty();
+  $favoritedStories.empty(); //empty out the html everytime
 
   const favoritesList = currentUser.favorites;
 
-  const listHTML = favoritesList.length === 0 
+  const listHTML = favoritesList.length === 0 //if there are no favorites, we display a message, otherwise we generate the HTML for every story in the favorites list
     ? "<h5>No favorites Added!</h5>" 
     : favoritesList.map(story => generateStoryMarkup(story, currentUser).prop('outerHTML')).join(""); //.prop converts the jQuery object to HTML string
 
@@ -153,7 +153,7 @@ async function deleteStory(evt) { //function responsible for deleting story
 
 
     await storyList.removeStory(currentUser, storyId); //this method removes the story from the storyList and the user's ownStories list
-    putUserStoriesOnPage();
+    putUserStoriesOnPage(); // this function is called to update the UI with list of stories
 }
 
 $('body').on('click', '.trash-can', deleteStory);

@@ -215,12 +215,12 @@ class User {
     }
   }
 
-  async _updateAPIFavorite(method, story) { //this is a method to update the API with the user's favorite
+  async updateAPIFavorite(method, story) { //this is a method to update the API with the user's favorite
     try {
       await axios({
         url: `${BASE_URL}/users/${this.username}/favorites/${story.storyId}`, //api url per the documentation
         method: method,
-        data: { token: this.loginToken },
+        data: { token: this.loginToken }, // we do this.loginToken because we are in the User class
       });
       return true;
     } catch (error) {
