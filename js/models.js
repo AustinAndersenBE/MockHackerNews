@@ -231,13 +231,13 @@ class User {
 
 
   async addFavorite(story) { //this is the method in charge of deciding if it's an adding or removing favorite
-    if (await this._updateAPIFavorite("POST", story)) { //ensures that local state is in sync with server state
+    if (await this.updateAPIFavorite("POST", story)) { //ensures that local state is in sync with server state
       this.favorites.push(story);
     }
   }
 
   async removeFavorite(story) {
-    if (await this._updateAPIFavorite("DELETE", story)) { //same
+    if (await this.updateAPIFavorite("DELETE", story)) { //same
       this.favorites = this.favorites.filter(s => s.storyId != story.storyId);
     }
   }

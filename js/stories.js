@@ -19,7 +19,10 @@ async function getAndShowStoriesOnStart() {
  * Returns the markup for the story.
  */
 
-//function takes a story and generates the story list that we see
+//this function is responsible for generating the HTML markup for a given story. Depending on the context, it will conditionally adjust the markups to include a trash can icon or a star icon
+
+// default value of user is null which implies that we assume there's no user logged in
+// showTrashBtn = false determines if a trash can icon should be displayed. Trash can icon isn't shown unless explicity stated
 function generateStoryMarkup(story, user = null, showTrashBtn = false) { // passing a user state in it allows us to check conditionally generate markup
   console.debug("generateStoryMarkup invoked with:", { story, user, showTrashBtn });
   const hostName = story.getHostName(); 
@@ -32,8 +35,8 @@ function generateStoryMarkup(story, user = null, showTrashBtn = false) { // pass
   if (user) { //if a user is logged in
     
     const isOwnStory = user.isOwnStory(story); //we check if the story belongs to the user
-    trashCanHTML = showTrashBtn && isOwnStory ? `<span class="trash-can"><i class="fas fa-trash-alt" data-story-id="${story.storyId}"></i></span>` : ""; //adding custom data to the trash button
-    // if we want this to show the trash button and if it's a user's own story, we create the trashcan icon html
+    trashCanHTML = showTrashBtn && isOwnStory ? `<span class="trash-can"><i class="fas fa-trash-alt" data-story-id="${story.storyId}"></i></span>` : ""; 
+    // we add the custom data-story-id attribute to associate each icon with a story. Event handlers can easily identify which story is being clicked on without needing to traverse the DOM
     
     isFavorite = user.isFavorite(story); // we set star type based on if it's already a favorited story by the user
     starType = isFavorite ? "fas" : "far";
@@ -86,6 +89,9 @@ $('body').on('click', '.fa-star', makeStarClickable);
 
 /** Gets list of stories from server, generates their HTML, and puts on page. */
 
+
+
+
 function putStoriesOnPage() { //function is in charge of putting the stories on the page
   console.debug("putStoriesOnPage");
 
@@ -101,11 +107,11 @@ function putStoriesOnPage() { //function is in charge of putting the stories on 
 }
 
 
-// this function is an async function that handles the event when a user submits a new story
 
 
 
-// once we generate that one new story, we add it to the beginning of the list of all stories which updates the UI
+// The purpose of this function is toe handle the event triggered when a user submits a nnew story using the form. The function
+// fetches story details from the from and sends them to the API to create a new story, then updates the local state with the new story
 async function showNewStory(evt) {
   console.debug("showNewStory");
   evt.preventDefault(); //prevents page from reloading
