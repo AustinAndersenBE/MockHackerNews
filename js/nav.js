@@ -65,7 +65,7 @@ $navFavorites.on("click", navFavoritesCLick);
 function navMyStories(evt) {
   console.debug("navMyStories", evt);
   hidePageComponents();
-  putUserStoriesOnPage(); //responsible for displaying the list on the webpage
+  putUserStoriesOnPage(); //responsible for displaying the user's list on the webpage
   $favoritedStories.hide();
 }
 

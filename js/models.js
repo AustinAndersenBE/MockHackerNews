@@ -83,8 +83,8 @@ class StoryList {
       data: storyData
     });
 
-    const newStory = new Story(response.data.story); // we create a new Story object afterwards and add it to the beginning of the stories list
-    this.stories.unshift(newStory); //this is within the storyList class so we have to do this.stories
+    const newStory = new Story(response.data.story); // we create a new Story object afterwards
+    this.stories.unshift(newStory); //add story to beginning of the stories property
     user.ownStories.unshift(newStory); // also need to add this to the user's ownStories list
 
     return newStory;
@@ -97,10 +97,10 @@ class StoryList {
       data: { token: user.loginToken } //API won't let me just pass in a token directly. I have to wrap the token in an ojbect
     });
 
-    this.stories = this.stories.filter(story => story.storyId !== storyId);  //updating our stories list
+    this.stories = this.stories.filter(story => story.storyId !== storyId);  //Filtering out the deleted story (keeping everything that's not equal to the story being deleted)
 
-    user.ownStories = user.ownStories.filter(s => s.storyId !== storyId); //updating user's story list
-    user.favorites = user.favorites.filter(s => s.storyId !== storyId); //updating user's favorite list
+    user.ownStories = user.ownStories.filter(s => s.storyId !== storyId); //filtering user's story list
+    user.favorites = user.favorites.filter(s => s.storyId !== storyId); //filter user's favorite list
   }
 }
 
@@ -215,6 +215,7 @@ class User {
     }
   }
 
+  //I factored out the updateAPIFavorite method from the addFavorite and removeFavorite methods for modularity
   async updateAPIFavorite(method, story) { //this is a method to update the API with the user's favorite
     try {
       await axios({
