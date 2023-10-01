@@ -69,7 +69,7 @@ class StoryList {
    * Returns the new Story instance
    */
 
-  //used in stories.js in showNewStory
+  //used in stories.js in showNewStory, API Call
   async addStory(user, { title, author, url}) { //takes in user, and an object containing title, author, and url
 
     const storyData = { //I put the token and story information in an object called storyData
@@ -215,7 +215,7 @@ class User {
     }
   }
 
-  //I factored out the updateAPIFavorite method from the addFavorite and removeFavorite methods for modularity
+  //method that updates the API depending on if it's a POST or DELETE
   async updateAPIFavorite(method, story) { //this is a method to update the API with the user's favorite
     try {
       await axios({

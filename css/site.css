@@ -47,7 +47,7 @@ a:hover {
 }
 
 .stories-container{
-  overflow: auto;
+  overflow: auto; /* auto scroll */
 }
 
 
